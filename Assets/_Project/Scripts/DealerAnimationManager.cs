@@ -6,19 +6,6 @@ public class DealerAnimationManager : MonoBehaviour
     private static readonly int Idle = Animator.StringToHash("Idle");
     private static readonly int Deal = Animator.StringToHash("Deal");
 
-    public static DealerAnimationManager Instance;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            return;
-        }
-        
-        Destroy(gameObject);
-    }
-
     public void PlayDealAnimation()
     {
         //Debug.Log("TriggerDeal");

@@ -21,12 +21,18 @@ public class DealerController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void Rpc_Dealing()
     {
-        DealerAnimationManager.Instance.PlayDealAnimation();
+        HandleDeal();
+    }
+
+    private void HandleDeal()
+    {
+        ReferenceManager.Instane.dealerAnimationManager.PlayDealAnimation();
+        ReferenceManager.Instane.cardManager.DealCards();
     }
     
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void Rpc_Idle()
     {
-        DealerAnimationManager.Instance.PlayIdleAnimation();
+        ReferenceManager.Instane.dealerAnimationManager.PlayIdleAnimation();
     }
 }

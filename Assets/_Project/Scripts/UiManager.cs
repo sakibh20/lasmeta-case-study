@@ -1,85 +1,127 @@
+using System;
+using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
-    [SerializeField] private DealerController dealer;
-    [SerializeField] private TurnManager turnManager;
-
-    [SerializeField] private Button startButton;
     [SerializeField] private Button nextRoundButton;
     [SerializeField] private Button dealButton;
 
+    [SerializeField] private RectTransform messagePanel;
     [SerializeField] private TextMeshProUGUI messageText;
-    
-    public static UiManager Instance;
+
+    [SerializeField] private List<Image> cardPlaceholders = new List<Image>();
+
+    private ReferenceManager _referenceManager;
+
+    private int _currentCardIndex;
+    private Vector2 _messagePanelInitialPos;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            return;
-        }
-        
-        Destroy(gameObject);
+        _messagePanelInitialPos = messagePanel.anchoredPosition;
+        HideMessagePanel();
     }
 
     private void Start()
     {
-        ShowMessage();
+        _referenceManager = ReferenceManager.Instane;
+        
         DisableInteraction();
-    }
-
-    public void OnStartGamePressed()
-    {
-        if (turnManager.Object.HasStateAuthority)
-        {
-            turnManager.StartGame();
-        }
     }
     
     public void OnNextTurnPressed()
     {
-        if (turnManager.Object.HasStateAuthority)
+        if (_referenceManager.turnManager.Object.HasStateAuthority)
         {
-            turnManager.NextTurn();
+            CancelInvoke(nameof(ShowNextMessage));
+            HideMessagePanel();
+            _referenceManager.turnManager.NextTurn();
         }
     }    
     
     public void OnDealButtonPressed()
     {
-        if (dealer != null)
+        if (_referenceManager.turnManager != null)
         {
-            dealer.TriggerDeal();
-        }
-    }
-    
-    public void OnIdleButtonPressed()
-    {
-        if (dealer != null)
-        {
-            dealer.TriggerIdle();
+            HideMessagePanel();
+            Invoke(nameof(ShowNextMessage), 2.0f);
+            _referenceManager.dealerController.TriggerDeal();
         }
     }
 
-    public void ShowMessage()
+    private void ShowNextMessage()
     {
-        messageText.text = "Waiting for others";
+        ShowMessage("Click Next Round button to end this round");
+    }
+
+    public void ShowMessage(string message, bool stayVisible = true, float visibleDuration = 0)
+    {
+        if(string.IsNullOrWhiteSpace(message)) return;
+        if(message == messageText.text) return;
+        
+        ShowMessagePanel(message);
+        
+        if (!stayVisible)
+        {
+            Invoke(nameof(HideMessagePanel), visibleDuration);
+        }
+    }
+
+    private void ShowMessagePanel(string message)
+    {
+        messageText.text = message;
+        HideMessagePanel(() =>
+        {
+            messagePanel.DOAnchorPos(_messagePanelInitialPos, 0.2f).SetEase(Ease.InBounce);
+        });
+    }
+
+    private void HideMessagePanel(Action onComplete = null)
+    {
+        messagePanel.DOAnchorPos(_messagePanelInitialPos + new Vector2(700, 0), 0.2f).SetEase(Ease.OutBounce).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
     }
 
     public void DisableInteraction()
     {
-        startButton.interactable = false;
         nextRoundButton.interactable = false;
         dealButton.interactable = false;
+
+        HideAllCards();
     }
     
     public void EnableInteraction()
     {
-        startButton.interactable = true;
         nextRoundButton.interactable = true;
         dealButton.interactable = true;
+        
+        ShowMessage("Start deal when ready");
+        HideAllCards();
+    }
+
+    public void SetCard(int drawnCardIndex)
+    {
+        if(_currentCardIndex >= cardPlaceholders.Count) return;
+        if(drawnCardIndex >= ReferenceManager.Instane.allCardImages.Count) return;
+        
+        cardPlaceholders[_currentCardIndex].sprite = ReferenceManager.Instane.allCardImages[drawnCardIndex];
+        cardPlaceholders[_currentCardIndex].enabled = true;
+
+        _currentCardIndex += 1;
+    }
+
+    private void HideAllCards()
+    {
+        _currentCardIndex = 0;
+        foreach (Image image in cardPlaceholders)
+        {
+            image.enabled = false;
+        }
     }
 }

@@ -3,19 +3,27 @@ using UnityEngine;
 
 public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
 {
-    [SerializeField] private NetworkObject dealerNetworkObject;
+    [SerializeField] private int minRequiredPlayers = 2;
+    private NetworkObject _dealerNetworkObject;
     [Networked] public int TurnIndex { get; set; }
     
     [Networked, Capacity(10)]
     private NetworkLinkedList<PlayerRef> SyncedPlayerList => default;
+
+    public int PlayerCount => SyncedPlayerList.Count;
     
     private bool _initialized;
-    
+
+    private void Awake()
+    {
+        _dealerNetworkObject = GetComponent<NetworkObject>();
+    }
+
     public override void Spawned()
     {
         if (!HasStateAuthority)
         {
-            UiManager.Instance.DisableInteraction();
+            ReferenceManager.Instane.uiManager.DisableInteraction();
         }
         
         if (!_initialized)
@@ -31,11 +39,17 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
         if (SyncedPlayerList.Contains(player)) return;
         
         SyncedPlayerList.Add(player);
+        ReferenceManager.Instane.uiManager.ShowMessage("Waiting for others");
+        if (SyncedPlayerList.Count < minRequiredPlayers) return;
 
-        if (SyncedPlayerList.Count < 3) return;
+        InitiateGame();
+    }
 
-        UiManager.Instance.EnableInteraction();
-        //StartGame();
+    private void InitiateGame()
+    {
+        ReferenceManager.Instane.uiManager.ShowMessage("Starting Game...", false, 3);
+        
+        Invoke(nameof(StartGame), 3);
     }
 
     public void PlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -45,6 +59,10 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
         if (!SyncedPlayerList.Contains(player)) return;
         
         SyncedPlayerList.Remove(player);
+        
+        if (SyncedPlayerList.Count >= minRequiredPlayers) return;
+        ReferenceManager.Instane.uiManager.ShowMessage("Waiting for others");
+        ReferenceManager.Instane.uiManager.DisableInteraction();
     }
     
     private bool IsValid()
@@ -55,14 +73,15 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
 
     public void StartGame()
     {
-        if (SyncedPlayerList.Count == 0)
-        {
-            Debug.LogWarning("Cannot start game: No players in PlayerManager");
-            return;
-        }
-
-        TurnIndex = 0;
-        RPC_GiveAuthorityToCurrentPlayer();
+        // if (SyncedPlayerList.Count == 0)
+        // {
+        //     Debug.LogWarning("Cannot start game: No players in PlayerManager");
+        //     return;
+        // }
+        //
+        // TurnIndex = 0;
+        // RPC_GiveAuthorityToCurrentPlayer();
+        ReferenceManager.Instane.uiManager.EnableInteraction();
     }
 
     public void NextTurn()
@@ -85,7 +104,7 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
     private void ReleaseAuthority()
     {
         Debug.Log($"Releasing authority");
-        dealerNetworkObject.ReleaseStateAuthority();
+        _dealerNetworkObject.ReleaseStateAuthority();
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -94,9 +113,11 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
         PlayerRef currentPlayer = SyncedPlayerList[TurnIndex];
         Debug.Log($"RequestStateAuthority: {currentPlayer}");
         
+        ReferenceManager.Instane.cardManager.HideAllCards();
+        
         if (Runner.LocalPlayer == currentPlayer)
         {
-            dealerNetworkObject.RequestStateAuthority();
+            _dealerNetworkObject.RequestStateAuthority();
         }
     }
 
@@ -106,11 +127,11 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
         
         if (Runner.LocalPlayer == currentPlayer)
         {
-            UiManager.Instance.EnableInteraction();
+            ReferenceManager.Instane.uiManager.EnableInteraction();
         }
         else
         {
-            UiManager.Instance.DisableInteraction();
+            ReferenceManager.Instane.uiManager.DisableInteraction();
         }
     }
 }
