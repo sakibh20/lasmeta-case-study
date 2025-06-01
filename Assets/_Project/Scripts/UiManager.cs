@@ -9,6 +9,7 @@ public class UiManager : MonoBehaviour
 {
     [SerializeField] private Button nextRoundButton;
     [SerializeField] private Button dealButton;
+    [SerializeField] private Toggle viewToggle;
 
     [SerializeField] private RectTransform messagePanel;
     [SerializeField] private TextMeshProUGUI messageText;
@@ -29,10 +30,25 @@ public class UiManager : MonoBehaviour
     private void Start()
     {
         _referenceManager = ReferenceManager.Instane;
-        
+        viewToggle.onValueChanged.AddListener(OnViewValueChanged);
         DisableInteraction();
     }
-    
+
+    private void OnViewValueChanged(bool isOn)
+    {
+        if(_referenceManager == null) return;
+        if(_referenceManager.playerMovement == null) return;
+        
+        if (isOn)
+        {
+            _referenceManager.playerMovement.BackToFirstPersonView();
+            ShowMessage("Use Arrow Keys or WASD to move");
+            return;
+        }
+        HideMessagePanel();
+        _referenceManager.playerMovement.BackToThirdPersonView();
+    }
+
     public void OnNextTurnPressed()
     {
         if (_referenceManager.turnManager.Object.HasStateAuthority)

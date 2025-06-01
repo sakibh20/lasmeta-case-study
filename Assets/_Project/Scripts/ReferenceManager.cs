@@ -10,7 +10,7 @@ public class ReferenceManager : MonoBehaviour
     public DealerAnimationManager dealerAnimationManager;
     public CardManager cardManager;
     public SoundManager soundManager;
-    
+    public PlayerMovement playerMovement;
     public List<Sprite> allCardImages = new List<Sprite>();
     
     public static ReferenceManager Instane;

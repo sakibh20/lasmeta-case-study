@@ -2,29 +2,27 @@ using UnityEngine;
 
 public class FirstPersonCamera : MonoBehaviour
 {
-    public Transform Target;
-    public float MouseSensitivity = 10f;
+    [HideInInspector] public PlayerMovement target;
+    [SerializeField] private float mouseSensitivity = 10f;
 
-    private float verticalRotation;
-    private float horizontalRotation;
-
-    void LateUpdate()
+    private float _verticalRotation;
+    private float _horizontalRotation;
+    
+    private void LateUpdate()
     {
-        if (Target == null)
-        {
-            return;
-        }
+        if (target == null) return;
+        if(!target.IsRoamingEnabled) return;
 
-        transform.position = Target.position;
+        transform.position = target.transform.position;
 
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        verticalRotation -= mouseY * MouseSensitivity;
-        verticalRotation = Mathf.Clamp(verticalRotation, -70f, 70f);
+        _verticalRotation -= mouseY * mouseSensitivity;
+        _verticalRotation = Mathf.Clamp(_verticalRotation, -70f, 70f);
 
-        horizontalRotation += mouseX * MouseSensitivity;
+        _horizontalRotation += mouseX * mouseSensitivity;
 
-        transform.rotation = Quaternion.Euler(verticalRotation, horizontalRotation, 0);
+        transform.rotation = Quaternion.Euler(_verticalRotation, _horizontalRotation, 0);
     }
 }
