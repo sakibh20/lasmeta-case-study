@@ -46,20 +46,20 @@ public class CardManager : MonoBehaviour
         
         if(startIndex >= allPlayersPos.Count) yield break;
         
-        for (int i = 0; i < ReferenceManager.Instane.turnManager.PlayerCount; i++)
+        for (int j = 0; j < 3; j++)
         {
-            int index = (i + startIndex) % ReferenceManager.Instane.turnManager.PlayerCount;
-            for (int j = 0; j < 3; j++)
+            for (int i = 0; i < ReferenceManager.Instane.turnManager.PlayerCount; i++)
             {
+                int index = (i + startIndex) % ReferenceManager.Instane.turnManager.PlayerCount;
                 Transform card;
-                if (allGeneratedCards.Count <= i*3 + j)
+                if (allGeneratedCards.Count <= j*ReferenceManager.Instane.turnManager.PlayerCount + i)
                 {
                     card = Instantiate(cardPrefab, initialCardPos).transform;
                     allGeneratedCards.Add(card);
                 }
                 else
                 {
-                    card = allGeneratedCards[i*3 + j];
+                    card = allGeneratedCards[j*ReferenceManager.Instane.turnManager.PlayerCount + i];
                 }
 
                 SetACard();
@@ -68,6 +68,7 @@ public class CardManager : MonoBehaviour
                 
                 yield return _waitTime;
             }
+            
             yield return _waitTime;
         }
         

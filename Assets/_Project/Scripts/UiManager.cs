@@ -69,6 +69,7 @@ public class UiManager : MonoBehaviour
     {
         if (_referenceManager.turnManager != null)
         {
+            dealButton.interactable = false;
             HideMessagePanel();
             Invoke(nameof(ShowNextMessage), 2.0f);
             _referenceManager.dealerController.TriggerDeal();

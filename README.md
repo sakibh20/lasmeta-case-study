@@ -86,9 +86,9 @@ Building a real-time synced experience came with hurdles:
 
 ---
 
-## 🎬 Demo
+## 🎬 Demo  
 
-[![Watch the Demo](https://img.youtube.com/vi/worTyFjI8Jg/0.jpg)](https://youtu.be/worTyFjI8Jg)
+[![Watch on YouTube](https://img.youtube.com/vi/Ydty5jxR3ZE/0.jpg)](https://youtu.be/Ydty5jxR3ZE)
 
 ---
 
