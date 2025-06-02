@@ -33,9 +33,7 @@ Photon Fusion (v2) in **Shared Mode** was used to implement efficient and scalab
 
 ### 4. UI & Input
 
-User input is designed for both desktop and development convenience:
-
-* A clean, **custom UI built in Figma** features a “Deal Cards” button.
+* A clean, **custom UI built in Figma**.
 * Interactions are validated based on game state and player turn.
 * **3D card objects** are recycled efficiently to reduce memory usage and instantiation overhead.
 
@@ -54,7 +52,7 @@ Going beyond the basic requirements:
 
 * **Round-based card dealing** implemented (one card at a time).
 * **Game Guide Info Panel** built using animated UI shows current game state and messages; animated via DoTween for smoothness and polish.
-* State information is maintained via **Networked Properties** for all clients.
+* Some information is maintained via **Networked Properties** for all clients.
 * Lighting is optimized via **static light baking** and **layer-masked real-time lights** to ensure only relevant objects receive lighting updates.
 * **Performance-conscious object reuse** strategy to reduce runtime allocation and GC overhead.
 * Game logic is structured around clear **turn control** via Fusion’s authority system.
@@ -90,7 +88,7 @@ Building a real-time synced experience came with hurdles:
 
 ## 🎬 Demo
 
-
+[![Watch the Demo](https://img.youtube.com/vi/worTyFjI8Jg/0.jpg)](https://youtu.be/worTyFjI8Jg)
 
 ---
 
