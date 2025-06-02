@@ -11,6 +11,8 @@ public class LightController : MonoBehaviour
         lightIntensitySlider.minValue = 0;
         lightIntensitySlider.maxValue = 100;
 
+        lightIntensitySlider.value = spotLight.intensity;
+
         lightIntensitySlider.onValueChanged.AddListener(UpdateLightIntensity);
     }
 

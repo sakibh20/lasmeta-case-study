@@ -18,7 +18,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [SerializeField] private bool isRoamingEnabled;
     public bool IsRoamingEnabled => isRoamingEnabled;
-    private FirstPersonCamera _firstPersonCamera;
+    private CameraController _firstPersonCamera;
     
     private Vector3 _initialPosition;
     private Quaternion _initialRotation;
@@ -69,7 +69,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             _camera = Camera.main;
             if(_camera == null) return;
-            _camera.GetComponent<FirstPersonCamera>().target = this;
+            _camera.GetComponent<CameraController>().target = this;
             _initialPosition = _camera.transform.localPosition;
             _initialRotation = _camera.transform.localRotation;
         }
