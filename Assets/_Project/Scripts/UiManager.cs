@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI cameraViewInstructionText;
     [SerializeField] private Button nextRoundButton;
     [SerializeField] private Button dealButton;
     [SerializeField] private Toggle viewToggle;
@@ -20,6 +21,9 @@ public class UiManager : MonoBehaviour
 
     private int _currentCardIndex;
     private Vector2 _messagePanelInitialPos;
+
+    private string thirdPersonViewText = "Scroll to Zoom & Drag to change camera angle";
+    private string firstPersonViewText = "Use Arrow Keys or WASD to move";
 
     private void Awake()
     {
@@ -36,15 +40,17 @@ public class UiManager : MonoBehaviour
 
     private void OnViewValueChanged(bool isOn)
     {
-        if(_referenceManager == null) return;
-        if(_referenceManager.playerMovement == null) return;
-        
+        if (_referenceManager == null) return;
+        if (_referenceManager.playerMovement == null) return;
+
         if (isOn)
         {
+            UpdateViewInstruction(firstPersonViewText);
             _referenceManager.playerMovement.BackToFirstPersonView();
-            ShowMessage("Use Arrow Keys or WASD to move");
             return;
         }
+
+        UpdateViewInstruction(thirdPersonViewText);
         HideMessagePanel();
         _referenceManager.playerMovement.BackToThirdPersonView();
     }
@@ -57,8 +63,8 @@ public class UiManager : MonoBehaviour
             HideMessagePanel();
             _referenceManager.turnManager.NextTurn();
         }
-    }    
-    
+    }
+
     public void OnDealButtonPressed()
     {
         if (_referenceManager.turnManager != null)
@@ -76,11 +82,11 @@ public class UiManager : MonoBehaviour
 
     public void ShowMessage(string message, bool stayVisible = true, float visibleDuration = 0)
     {
-        if(string.IsNullOrWhiteSpace(message)) return;
-        if(message == messageText.text) return;
-        
+        if (string.IsNullOrWhiteSpace(message)) return;
+        if (message == messageText.text) return;
+
         ShowMessagePanel(message);
-        
+
         if (!stayVisible)
         {
             Invoke(nameof(HideMessagePanelNoCallback), visibleDuration);
@@ -115,21 +121,21 @@ public class UiManager : MonoBehaviour
 
         HideAllCards();
     }
-    
+
     public void EnableInteraction()
     {
         nextRoundButton.interactable = true;
         dealButton.interactable = true;
-        
+
         ShowMessage("Start deal when ready");
         HideAllCards();
     }
 
     public void SetCard(int drawnCardIndex)
     {
-        if(_currentCardIndex >= cardPlaceholders.Count) return;
-        if(drawnCardIndex >= ReferenceManager.Instane.allCardImages.Count) return;
-        
+        if (_currentCardIndex >= cardPlaceholders.Count) return;
+        if (drawnCardIndex >= ReferenceManager.Instane.allCardImages.Count) return;
+
         cardPlaceholders[_currentCardIndex].sprite = ReferenceManager.Instane.allCardImages[drawnCardIndex];
         cardPlaceholders[_currentCardIndex].enabled = true;
 
@@ -143,5 +149,15 @@ public class UiManager : MonoBehaviour
         {
             image.enabled = false;
         }
+    }
+
+    public void UpdateViewInstruction(string message)
+    {
+        cameraViewInstructionText.text = message;
+    }
+
+    public void EnableCameraViewToggle(bool value)
+    {
+        viewToggle.interactable = value;
     }
 }

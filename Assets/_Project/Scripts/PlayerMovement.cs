@@ -11,15 +11,15 @@ public class PlayerMovement : NetworkBehaviour
 
     private CharacterController _controller;
 
-    [FormerlySerializedAs("PlayerSpeed")] [SerializeField] private float playerSpeed = 2f;
+    [FormerlySerializedAs("PlayerSpeed")][SerializeField] private float playerSpeed = 2f;
 
-    [FormerlySerializedAs("JumpForce")] [SerializeField] private float jumpForce = 5f;
-    [FormerlySerializedAs("GravityValue")] [SerializeField] private float gravityValue = -9.81f;
+    [FormerlySerializedAs("JumpForce")][SerializeField] private float jumpForce = 5f;
+    [FormerlySerializedAs("GravityValue")][SerializeField] private float gravityValue = -9.81f;
 
     [SerializeField] private bool isRoamingEnabled;
     public bool IsRoamingEnabled => isRoamingEnabled;
     private CameraController _firstPersonCamera;
-    
+
     private Vector3 _initialPosition;
     private Quaternion _initialRotation;
 
@@ -38,8 +38,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if(!isRoamingEnabled) return;
-        
+        if (!isRoamingEnabled) return;
+
         if (_controller.isGrounded)
         {
             _velocity = new Vector3(0, -1, 0);
@@ -62,16 +62,17 @@ public class PlayerMovement : NetworkBehaviour
 
         _jumpPressed = false;
     }
-    
+
     public override void Spawned()
     {
         if (HasStateAuthority)
         {
             _camera = Camera.main;
-            if(_camera == null) return;
+            if (_camera == null) return;
             _camera.GetComponent<CameraController>().target = this;
             _initialPosition = _camera.transform.localPosition;
             _initialRotation = _camera.transform.localRotation;
+            ReferenceManager.Instane.uiManager.EnableCameraViewToggle(true);
         }
     }
 
@@ -86,11 +87,16 @@ public class PlayerMovement : NetworkBehaviour
         isRoamingEnabled = false;
         _camera.transform.SetLocalPositionAndRotation(_initialPosition, _initialRotation);
     }
-    
-    
+
+
     [ContextMenu("BackToFirstPersonView")]
     public void BackToFirstPersonView()
     {
         isRoamingEnabled = true;
+    }
+
+    void OnDestroy()
+    {
+        ReferenceManager.Instane.uiManager.EnableCameraViewToggle(false);
     }
 }
