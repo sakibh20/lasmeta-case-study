@@ -2,6 +2,10 @@ using Fusion;
 
 public class DealerController : NetworkBehaviour
 {
+    public override void Spawned()
+    {
+        ReferenceManager.Instane.playerSpawner.ShowMarker(Object.HasStateAuthority);
+    }
     public void TriggerIdle()
     {
         if (Object.HasStateAuthority)

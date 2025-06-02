@@ -83,7 +83,7 @@ public class UiManager : MonoBehaviour
         
         if (!stayVisible)
         {
-            Invoke(nameof(HideMessagePanel), visibleDuration);
+            Invoke(nameof(HideMessagePanelNoCallback), visibleDuration);
         }
     }
 
@@ -102,6 +102,10 @@ public class UiManager : MonoBehaviour
         {
             onComplete?.Invoke();
         });
+    }
+    private void HideMessagePanelNoCallback()
+    {
+        messagePanel.DOAnchorPos(_messagePanelInitialPos + new Vector2(700, 0), 0.2f).SetEase(Ease.OutBounce);
     }
 
     public void DisableInteraction()

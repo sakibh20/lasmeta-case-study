@@ -8,7 +8,7 @@ public class LightController : MonoBehaviour
 
     private void Start()
     {
-        lightIntensitySlider.minValue = 10;
+        lightIntensitySlider.minValue = 0;
         lightIntensitySlider.maxValue = 100;
 
         lightIntensitySlider.onValueChanged.AddListener(UpdateLightIntensity);

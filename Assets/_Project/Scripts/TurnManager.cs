@@ -73,14 +73,6 @@ public class TurnManager : NetworkBehaviour, IStateAuthorityChanged
 
     public void StartGame()
     {
-        // if (SyncedPlayerList.Count == 0)
-        // {
-        //     Debug.LogWarning("Cannot start game: No players in PlayerManager");
-        //     return;
-        // }
-        //
-        // TurnIndex = 0;
-        // RPC_GiveAuthorityToCurrentPlayer();
         ReferenceManager.Instane.uiManager.EnableInteraction();
     }
 
