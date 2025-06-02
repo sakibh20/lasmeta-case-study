@@ -84,7 +84,6 @@ Building a real-time synced experience came with hurdles:
 * `IPlayerJoined` on `SimulationBehaviour` failed to trigger, requiring a fallback to `NetworkEvents`.
 * Documentation around **ChangeDetector** and **OnChanged** was limited, so RPCs were used instead—though not ideal for large-scale design.
 * In some cases, **state authority delays** introduced race conditions; managing those required careful event ordering.
-* Unexpected behavior from `HasStateAuthority` until authority transfer was explicitly managed.
 * While Shared Mode was used for simplicity, future implementations would benefit from **Fusion Server Mode** for stronger control and robustness.
 
 ---
@@ -98,7 +97,7 @@ Building a real-time synced experience came with hurdles:
 ## 📩 Contact
 
 **MD SAKIB HASAN**  
-📧 [sakibh20@gmail.com](mailto:sakib.hasan@tuni.fi)  
+📧 [sakibh20@gmail.com](mailto:sakibh20@gmail.com)  
 🌐 [mdsakibhasan.com](https://mdsakibhasan.com)  
 📁 [Portfolio](https://mdsakibhasan.com)  
 📱 +358 0417432173  
