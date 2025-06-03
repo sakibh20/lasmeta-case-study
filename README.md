@@ -88,6 +88,8 @@ Building a real-time synced experience came with hurdles:
 
 ## 🎬 Demo  
 
+**⚠️The demo video came out a bit badly. I think I recorded at 30fps. But actually, the thing is running super smoothly.**
+
 [![Watch on YouTube](https://img.youtube.com/vi/Ydty5jxR3ZE/0.jpg)](https://youtu.be/Ydty5jxR3ZE)
 
 ---
